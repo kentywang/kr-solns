@@ -2,19 +2,19 @@
 
 main()
 {
-	float fahr, celsius;
-	int lower, upper, step;
+  float fahr, celsius;
+  int lower, upper, step;
 
-	lower = 0;
-	upper = 300;
-	step = 20;
+  lower = 0;
+  upper = 300;
+  step = 20;
 
-	printf("%3c %6c\n--- ------\n", 'F', 'C');
+  printf("%3c %6c\n--- ------\n", 'F', 'C');
 
-	fahr = lower;
-	while (fahr <= upper) {
-		celsius = (5.0/9.0) * (fahr-32.0);
-		printf("%3.0f %6.1f\n", fahr, celsius);
-		fahr = fahr + step;
-	}
+  fahr = lower;
+  while (fahr <= upper) {
+    celsius = (5.0/9.0) * (fahr-32.0);
+    printf("%3.0f %6.1f\n", fahr, celsius);
+    fahr = fahr + step;
+  }
 }
