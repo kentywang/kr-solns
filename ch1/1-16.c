@@ -11,8 +11,7 @@ main()
   char line[MAXLINE];
   
   while ((len = setline_getlen(line, MAXLINE)) > 0)
-    if (len > 0)
-      printf("\nLength: %d\nString:\n%s\n", len, line);
+    printf("\nLength: %d\nString:\n%s\n", len, line);
   
   return 0;
 }

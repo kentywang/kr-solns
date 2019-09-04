@@ -25,7 +25,8 @@ int main()
   return 0;
 }
 
-int trim(char s[], int s_length) {
+int trim(char s[], int s_length)
+{
   int i;
 
   // Assumes length supplied doesn't factor in null character.
