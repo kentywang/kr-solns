@@ -31,8 +31,10 @@ int trim(char s[], int s_length) {
   // Assumes length supplied doesn't factor in null character.
   for (i = s_length-1; i >= 0; --i) {
     if (s[i] != ' ' && s[i] != '\t' && s[i] != '\n') {
-      s[i+1] = '\0';
-      return i+1; // This is the trimmed length.
+      // Increment i to add null character after last non-whitespace char.
+      ++i;
+      s[i] = '\0';
+      return i; // This is the trimmed length.
     }
   }
 
