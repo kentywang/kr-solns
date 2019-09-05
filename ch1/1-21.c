@@ -57,7 +57,7 @@ int main()
         ++spaces_seen;
       }
       if (zero_if_last_pos == 0)
-        putchar('X');
+        putchar('\t');
       else {
         while (spaces_seen > 0) {
           putchar(' ');
