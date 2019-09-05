@@ -21,6 +21,9 @@ Edge case: converting ending tab to space would overflow array.
 [A][B][\t][\0]  becomes:  [A][B][ ][\0]
  0  1   2   3              0  1  2   3
 
+EDIT: Since we don't need to look ahead, we could've not stored the input in
+the line variable, and just directly released the output via putchar.
+
 */
 
 int detab(char line[]);
@@ -50,7 +53,7 @@ int detab(char s[])
         ++i;
       }
 
-      spaces_to_add = TAB_STOP_SIZE; // Spaces count is 0, so reset.
+      spaces_to_add = TAB_STOP_SIZE; // Spaces count is now 0, so reset.
     }
     else {
       s[i] = c;
