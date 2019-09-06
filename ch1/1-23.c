@@ -42,6 +42,9 @@ int main()
   int c;
   // Stores quote, slash, asterisk, or UNASSIGNED. Handling quotes takes
   // precedence, then comment characters, since comments can't be in quotes.
+
+  // When outside of quotes or comments, freely store ' or " or * whenever
+  // encountered. But in quote, ignore storing for comments.
   int last_c;
   // Don't need 16-bits for these. Char is the smallest type we know so far.
   char in_comment, in_quote;
@@ -59,7 +62,7 @@ int main()
           } else {
             putchar('/');
             putchar(c);
-            
+
             if (c == '\'' || c == '"') {
               in_quote = TRUE;
               last_c = c;
@@ -78,11 +81,15 @@ int main()
           }
         }
       } else if (last_c == '*') {
-        if (c == '/') { // need case to set last char to *
-          in_comment = FALSE;
+        if (c != '*') {
+          // Reset last_c if anything but *. If *, keep it *.
           last_c = UNASSIGNED;
-          putchar(' ');
-        } 
+        
+          if (c == '/') {
+            in_comment = FALSE;
+            putchar(' ');
+          }
+        }
       } else if (c == '*') {
         last_c = '*';
       }
