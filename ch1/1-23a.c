@@ -44,7 +44,8 @@ int main()
   // precedence, then comment characters, since comments can't be in quotes.
 
   // When outside of quotes or comments, freely store ' or " or * whenever
-  // encountered. But in quote, ignore storing for comments.
+  // encountered. But in quote, ignore storing for comments. We use this for
+  // in quote only to differentiate between ' and ".
   int last_c;
   // Don't need 16-bits for these. Char is the smallest type we know so far.
   char in_comment, in_quote;
