@@ -16,6 +16,8 @@ To get n number of 1s, we need to left-shift 1s n times and then invert.
 To get the second mask, we need ¿¿¿¿¿¿¿¿ to AND with mask 00111000.
 To get 00111000, we just do the same thing as for the other mask, but don't
 invert at the end.
+
+EDIT: XOR simplifies this to: x ^ getmask(p, n).
 */
 
 unsigned int invert(unsigned int x, int p, int n);
