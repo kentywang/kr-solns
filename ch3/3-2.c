@@ -29,14 +29,16 @@ void unescape(char s[], char t[])
         case 'n':
           t[j++] = '\n';
           break;
-        case '0':
-          t[j] = '\0';
+        default: // EDIT: Print other escaped sequences literally.
+          t[j++] = '\\';
+          t[j++] = s[i];
           return;
-        // No other escape sequences handled.
       }
     else
       t[j++] = s[i];
   }
+  // EDIT: Needs this, since null character is not escaped.
+  t[j] = '\0';
 }
 
 void escape(char s[], char t[])
@@ -57,4 +59,6 @@ void escape(char s[], char t[])
         break;
     }
   }
+  // EDIT: Forgot this.
+  t[j] = '\0';
 }
