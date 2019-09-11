@@ -9,7 +9,7 @@
 
 The book example of itoa can't handle the largest negative number of because
 it converts any negative number to positive, meaning the largest negative
-would get converted to 0.
+would get converted to itself.
 
 To counter this, we would just leave n untouched but take the absolute value
 of the modulo within the do-while loop. And we need to make sure the while
