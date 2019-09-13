@@ -170,8 +170,9 @@ int getop(char s[])
   if (c == '-') { // 4.3
     c = getch(); // Peek at next character
 
-    if (!isdigit(c)) {
-      ungetch(c);
+    if (!isdigit(c) && c !='.') {
+      if (c != EOF)
+        ungetch(c);
       return '-';
     }
 
@@ -184,7 +185,7 @@ int getop(char s[])
     while (isdigit(s[++i] = c = getch()))
       ;
   s[i] = '\0';
-  if (c != EOF)
+  if (c != EOF) // Wouldn't this mean the next loop would overshoot the EOF?
     ungetch(c);
   return NUMBER;
 }
