@@ -25,9 +25,9 @@ void print_top(void);
 void dupe_top(void);
 void swap_operands(void);
 void clear_stack(void);
-void set_variable(char letter, double value);
-double get_variable(char letter);
-int is_assigned(char letter);
+void set_variable(int letter, double value);
+double get_variable(int letter);
+int is_assigned(int letter);
 
 /* reverse Polish calculator */
 int main(void)
@@ -176,19 +176,19 @@ void clear_stack(void)
   sp = 0;
 }
 
-int is_assigned(char letter)
+int is_assigned(int letter)
 {
   return variables_assigned[letter - 'a'] == VARIABLE_IS_ASSIGNED ? 1 : 0;
 }
 
-void set_variable(char letter, double value)
+void set_variable(int letter, double value)
 {
   letter -= 'a';
   variables[letter] = value;
   variables_assigned[letter] = VARIABLE_IS_ASSIGNED;
 }
 
-double get_variable(char letter)
+double get_variable(int letter)
 {
   return variables[letter - 'a'];
 }
@@ -196,6 +196,7 @@ double get_variable(char letter)
 /////////////////////////////////////////////////////////////////////////////
 
 #include <ctype.h>
+#include <string.h>
 
 int getch(void);
 void ungetch(int);
@@ -252,4 +253,13 @@ void ungetch(int c)  // push back on input
   if (bufp >= BUFFSIZE)
     printf("ungetch: too many characters\n");
   else buf[bufp++] = c;
+}
+
+// 4.7
+void ungets(char s[])
+{
+  int i;
+  for (i = strlen(s) - 1; i >= 0; --i) {
+    ungetch(s[i]);
+  }
 }
