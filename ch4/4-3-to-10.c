@@ -9,8 +9,9 @@ need to understand how headers, defines, and declarations work across files.
 4.6
 I interpret this problem to mean that when a user enters a letter, then
 number at the top of the stack is examined and associated with that letter,
-so that in the future the letter is an alias for the number, until it's
-overridden.
+so that in the future the letter is always an alias for the number. More work
+needed to allow multiple sets to a same variable, since we need a language
+to differentiate between setting and getting.
 
 */
 
@@ -24,6 +25,9 @@ void print_top(void);
 void dupe_top(void);
 void swap_operands(void);
 void clear_stack(void);
+void set_variable(char letter, double value);
+double get_variable(char letter);
+int is_assigned(char letter);
 
 /* reverse Polish calculator */
 int main(void)
@@ -31,6 +35,7 @@ int main(void)
   int type;
   double op2;
   char s[MAXOP];
+  double temp;
 
   while ((type = getop(s)) != EOF) {
     switch (type) {
@@ -53,7 +58,8 @@ int main(void)
           push (pop() / op2);
         break;
       case '\n':
-        printf("\t%.8g\n", pop());
+        set_variable('x', pop());
+        printf("\t%.8g\n", get_variable('x'));
         break;
       case '%': // 4.3
         op2 = pop();
@@ -73,17 +79,31 @@ int main(void)
       //   clear_stack();
       //   break;
       // 4.5
-      case 's':
-        push(sin(pop()));
-        break;
-      case 'e':
-        push(exp(pop()));
-        break;
-      case 'p':
-        // Ensure 2nd operand is passed as 2nd arg to pow().
-        // (Since evaluation order is not specified.)
-        op2 = pop();
-        push(pow(pop(), op2));
+      // case 's':
+      //   push(sin(pop()));
+      //   break;
+      // case 'e':
+      //   push(exp(pop()));
+      //   break;
+      // case 'p':
+      //   // Ensure 2nd operand is passed as 2nd arg to pow().
+      //   // (Since evaluation order is not specified.)
+      //   op2 = pop();
+      //   push(pow(pop(), op2));
+      //   break;
+      // 4.6
+      case 'a':
+      case 'b':
+      case 'c':
+      case 'x':
+        if (is_assigned(type))
+          push(get_variable(type));
+        else { 
+          temp = pop();
+          push(temp);
+          set_variable(type, temp);
+        }
+
         break;
       default:
         printf("error: unknown command %s\n", s);
@@ -93,10 +113,16 @@ int main(void)
   return 0;
 }
 
+/////////////////////////////////////////////////////////////////////////////
+
 #define MAXVAL 100
+#define VARIABLES_LENGTH 26
+#define VARIABLE_IS_ASSIGNED 999 /* Could clash with garbage in array. */
 
 int sp = 0;
 double val[MAXVAL];
+double variables_assigned[VARIABLES_LENGTH];
+double variables[VARIABLES_LENGTH];
 
 /* push: push f onto value stack */
 void push(double f)
@@ -150,6 +176,25 @@ void clear_stack(void)
   sp = 0;
 }
 
+int is_assigned(char letter)
+{
+  return variables_assigned[letter - 'a'] == VARIABLE_IS_ASSIGNED ? 1 : 0;
+}
+
+void set_variable(char letter, double value)
+{
+  letter -= 'a';
+  variables[letter] = value;
+  variables_assigned[letter] = VARIABLE_IS_ASSIGNED;
+}
+
+double get_variable(char letter)
+{
+  return variables[letter - 'a'];
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
 #include <ctype.h>
 
 int getch(void);
@@ -189,6 +234,8 @@ int getop(char s[])
     ungetch(c);
   return NUMBER;
 }
+
+/////////////////////////////////////////////////////////////////////////////
 
 #define BUFFSIZE 100
 
