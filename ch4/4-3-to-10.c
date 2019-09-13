@@ -219,6 +219,8 @@ int getop(char s[])
     if (!isdigit(c) && c !='.') {
       if (c != EOF)
         ungetch(c);
+      else
+        ungetch('\n'); // 4.9
       return '-';
     }
 
@@ -233,6 +235,8 @@ int getop(char s[])
   s[i] = '\0';
   if (c != EOF) // Wouldn't this mean the next loop would overshoot the EOF?
     ungetch(c);
+  else
+    ungetch('\n'); // 4.9
   return NUMBER;
 }
 
