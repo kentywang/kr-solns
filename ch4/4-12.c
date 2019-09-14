@@ -1,6 +1,11 @@
 #include <stdio.h>
 #define MAXLINE 1000
 
+/*
+EDIT: We could've done it with one function, not two, but there would've been
+duplicated work in adding the null character to the end of each recursion.
+*/
+
 void itoa(int n, char s[]);
 
 int main()
