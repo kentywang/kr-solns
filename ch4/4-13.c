@@ -12,10 +12,11 @@ int main()
   return 0;
 }
 
-void reverse_iter(char s[], int start, int end);
-
 void reverse(char s[])
 {
+  // EDIT: Moved declaration into function.
+  void reverse_iter(char s[], int start, int end);
+
   reverse_iter(s, 0, strlen(s) - 1); // Ignore null char at end.
 }
 
