@@ -1,18 +1,23 @@
 #include <stdio.h>
 
+/*
+Return type of getfloat remains the same as getint's.
+*/
+
 #define MAXLEN 1000
 
-int getint(int *);
+int getfloat(double *);
 
 int main(void)
 {
-  int a[MAXLEN], n, temp;
+  double a[MAXLEN];
+  int n, temp;
 
-  for (n = 0; n < MAXLEN && (temp = getint(&a[n])) != EOF && temp != 0; n++)
+  for (n = 0; n < MAXLEN && (temp = getfloat(&a[n])) != EOF && temp != 0; n++)
     ;
 
   for (int i = 0; i < n; i++)
-    printf("%d\n", a[i]);
+    printf("%f\n", a[i]);
 
   return 0;
 }
@@ -22,22 +27,20 @@ int main(void)
 int getch(void);
 void ungetch(int);
 
-/* getint: get next integer from input into *pn */
-int getint(int *pn)
+int getfloat(double *pn)
 {
-  int c, d, sign;
+  int c, d, sign, power;
 
   while (isspace(c = getch())) // skip whitespaces
     ;
-  if (!isdigit(c) && c != EOF && c!= '+' && c != '-')
+  if (!isdigit(c) && c != EOF && c!= '+' && c != '-' && c != '.')
     {
       ungetch(c);   // it's not a number
       return 0;
     }
   sign = (c == '-') ? -1 : 1;
   if (c == '+' || c == '-') {
-    // 5.1
-    if (!isdigit(d = getch())) {
+    if (!isdigit(d = getch()) && d != '.') {
       if (d == EOF) {
         ungetch(c); // Put back sign char.
         return d;
@@ -49,9 +52,25 @@ int getint(int *pn)
     }
     c = d;
   }
+    // printf("\nStep 1: %c\n", c);
   for (*pn = 0; isdigit(c); c = getch())
     *pn = 10 * *pn + (c - '0');
-  *pn *= sign;
+
+  if (c == '.') {
+    if (!isdigit(d = getch())) {
+      if (d == EOF)
+        return d;
+
+      ungetch(d); // Put back whatever that non-digit, non-EOF char was.
+      return 0;
+    }
+    c = d;
+  }
+
+  for (power = 1; isdigit(c); c = getch(), power *= 10)
+    *pn = 10 * *pn + (c - '0');
+  // printf("\nStep 3: %f\n", *pn);
+  *pn = *pn * sign / power;
   if (c != EOF)
     ungetch(c);
   return c;
