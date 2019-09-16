@@ -5,7 +5,7 @@ int strend(char *s, char *t);
 int main()
 {
   char a[] = "I love corgis";
-  printf("%d\n", strend(a, "corgis"));
+  printf("%d\n", strend(a, "I love corgis"));
 
   return 0;
 }
