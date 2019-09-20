@@ -2,7 +2,11 @@
 #include <string.h>
 
 #define MAXLINES 5000
+
 char *lineptr[MAXLINES];
+static int reverse = 0;
+static int numeric = 0;
+static int case_sensitive = 1;
 
 int readlines(char *lineptr[], int nlines);
 void writelines(char *lineptr[], int nlines);
@@ -11,9 +15,13 @@ void qsort2(void *lineptr[], int left, int right, int (*comp)(void *, void *));
 
 int numcmp(char *, char *);
 
-static int reverse = 0;
-static int numeric = 0;
-static int case_sensitive = 1;
+/*
+Skipped 5-16 because I didn't realize there were other char besides alpha-
+numeric and whitespace.
+
+Skipped 5-17 because I didn't understand the problem. And it didn't sound
+interesting.
+*/
 
 int main(int argc, char *argv[])
 {
