@@ -7,17 +7,18 @@ char *lineptr[MAXLINES];
 int readlines(char *lineptr[], int nlines);
 void writelines(char *lineptr[], int nlines);
 
-void qsort2(void *lineptr[], int left, int right, int reverse,
-  int (*comp)(void *, void *));
+void qsort2(void *lineptr[], int left, int right, int (*comp)(void *, void *));
 
 int numcmp(char *, char *);
+
+static int reverse = 0;
+static int numeric = 0;
+static int case_sensitive = 1;
 
 int main(int argc, char *argv[])
 {
   int nlines;
   int c;
-  int reverse = 0;
-  int numeric = 0;
 
   while (--argc && (*++argv)[0] == '-')
     while (c = *++argv[0])
@@ -28,14 +29,17 @@ int main(int argc, char *argv[])
       case 'r':
         reverse = 1;
         break;
+      case 'f':
+        case_sensitive = 0;
+        break;
       default:
         printf("Unexpected argument.\n");
         return -1;
       }
 
-  if((nlines = readlines(lineptr, MAXLINES)) >= 0)
+  if ((nlines = readlines(lineptr, MAXLINES)) >= 0)
     {
-      qsort2((void **) lineptr, 0, nlines-1, reverse,
+      qsort2((void **) lineptr, 0, nlines-1,
        (int (*)(void*, void*))(numeric ? numcmp : strcmp));
       writelines(lineptr, nlines);
       return 0;
@@ -47,23 +51,47 @@ int main(int argc, char *argv[])
     }
 }
 
-void qsort2(void *v[], int left, int right, int reverse,
-  int(*comp)(void *, void *))
-{
-  int i, last;
-  void swap(void *v[], int, int);
+#define MAXLEN 1000   // max length of any input line
 
-  if(left >= right)
+void qsort2(void *v[], int left, int right, int(*comp)(void *, void *))
+{
+  void swap(void *v[], int, int);
+  void to_cmp_buffer(char *, char *);
+
+  int i, last;
+  char a[MAXLEN], b[MAXLEN];
+
+  if (left >= right)
     return;
   swap(v, left, (left + right) / 2);
   last = left;
-  for(i = left + 1; i <= right; i++)
+  for (i = left + 1; i <= right; i++) {
+    to_cmp_buffer(a, v[i]);
+    to_cmp_buffer(b, v[left]);
+
     // 5-14
-    if ((reverse ? (*comp)(v[left], v[i]) : (*comp)(v[i], v[left])) < 0)
+    if ((reverse ? (*comp)(b, a) : (*comp)(a, b)) < 0)
       swap(v, ++last, i);
+  }
   swap(v, left, last);
-  qsort2(v, left, last - 1, reverse, comp);
-  qsort2(v, last + 1, right, reverse, comp);
+  qsort2(v, left, last - 1, comp);
+  qsort2(v, last + 1, right, comp);
+}
+
+// 5-15
+void to_cmp_buffer(char *buf, char *line)
+{
+  if (case_sensitive)
+    while (*buf++ = *line++)
+      ;
+  else {
+    for (; *line; line++)
+      *buf++ = 
+        *line >= 'a' && *line <= 'z'
+          ? *line - 'a' + 'A'
+          : *line;
+    *buf = '\0';
+  }
 }
 
 #include <stdlib.h>
@@ -92,7 +120,6 @@ void swap(void *v[], int i, int j)
 }
 
 
-#define MAXLEN 1000   // max length of any input line
 int get_line(char *, int);
 char *alloc(int);
 
