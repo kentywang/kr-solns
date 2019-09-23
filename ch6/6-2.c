@@ -6,6 +6,10 @@
 // #define MAXWORD 100
 #define DEFAULT_LEN 6
 
+/*
+Modified getword and main.
+*/
+
 struct tnode               // the tree node:
 {
   char *word;              // points to the text
