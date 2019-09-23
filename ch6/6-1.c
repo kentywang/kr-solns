@@ -87,7 +87,7 @@ int getword(char *word, int lim)
       break;
     }
   *w = '\0';
-  // printf("Gotword!: %s\n", word);
+  printf("Gotword!: %s\n", word);
   return word[0];
 }
 
